@@ -41,18 +41,18 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center bg-hero-gradient overflow-hidden">
+      <section className="hero-section relative min-h-screen flex items-center justify-center bg-hero-gradient overflow-hidden">
         <WaterParticles />
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-8 animate-fade-in">
             <Droplets className="w-4 h-4 text-ocean-aqua" />
-            <span className="text-primary-foreground/80 text-sm font-medium">
+            <span className="hero-text-muted text-sm font-medium">
               Water Intelligence Platform
             </span>
           </div>
 
           <h1
-            className="text-5xl md:text-7xl font-display font-bold text-primary-foreground mb-6 animate-fade-in"
+            className="text-5xl md:text-7xl font-display font-bold hero-text mb-6 animate-fade-in"
             style={{ animationDelay: "0.1s" }}
           >
             Neer
@@ -60,14 +60,14 @@ const Index = () => {
           </h1>
 
           <p
-            className="text-xl md:text-2xl text-primary-foreground/70 font-light mb-4 animate-fade-in"
+            className="text-xl md:text-2xl hero-text-muted font-light mb-4 animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
             Beyond Usage. Toward Regeneration.
           </p>
 
           <p
-            className="text-primary-foreground/50 max-w-2xl mx-auto mb-10 animate-fade-in"
+            className="hero-text-dim max-w-2xl mx-auto mb-10 animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
             A comprehensive water governance platform helping businesses achieve 1.5x
@@ -86,19 +86,19 @@ const Index = () => {
             </Link>
             <Link
               to="/simulation"
-              className="px-6 py-3 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground font-semibold text-sm hover:bg-primary-foreground/20 transition-all backdrop-blur-sm"
+              className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
               Try Simulation
             </Link>
             <Link
               to="/dashboard"
-              className="px-6 py-3 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground font-semibold text-sm hover:bg-primary-foreground/20 transition-all backdrop-blur-sm"
+              className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
               View Dashboard
             </Link>
             <Link
               to="/game"
-              className="px-6 py-3 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground font-semibold text-sm hover:bg-primary-foreground/20 transition-all backdrop-blur-sm"
+              className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
               Play the Game
             </Link>
@@ -142,7 +142,7 @@ const Index = () => {
                 className="stat-card group flex gap-4 items-start"
               >
                 <div className="w-12 h-12 rounded-xl bg-aqua-gradient flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                  <f.icon className="w-6 h-6 text-primary-foreground" />
+                  <f.icon className="w-6 h-6 text-secondary-foreground" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-display font-semibold text-primary text-lg mb-1 flex items-center gap-2">
@@ -158,13 +158,13 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-ocean-gradient text-primary-foreground relative overflow-hidden">
+      <section className="hero-section bg-ocean-gradient relative overflow-hidden">
         <WaterParticles />
         <div className="section-container relative z-10 text-center">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 hero-text">
             Ready to become water-positive?
           </h2>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto mb-8">
+          <p className="hero-text-muted max-w-xl mx-auto mb-8">
             Explore the crisis, simulate solutions, and track your path to 1.5x replenishment.
           </p>
           <Link

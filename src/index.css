@@ -62,7 +62,58 @@
     --sidebar-border: 210 20% 90%;
     --sidebar-ring: 199 84% 52%;
   }
-}
+  }
+
+  .dark {
+    --background: 210 40% 7%;
+    --foreground: 210 20% 92%;
+
+    --card: 210 40% 10%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 210 40% 10%;
+    --popover-foreground: 210 20% 92%;
+
+    --primary: 199 84% 70%;
+    --primary-foreground: 210 40% 7%;
+
+    --secondary: 199 84% 52%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 30% 15%;
+    --muted-foreground: 210 15% 55%;
+
+    --accent: 168 100% 39%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 30% 18%;
+    --input: 210 30% 18%;
+    --ring: 199 84% 52%;
+
+    --ocean-deep: 203 80% 60%;
+    --ocean-aqua: 199 84% 60%;
+    --ocean-teal: 168 100% 45%;
+    --ocean-green: 146 51% 45%;
+
+    --gradient-hero: linear-gradient(180deg, hsl(210 40% 5%), hsl(210 40% 8%) 40%, hsl(203 60% 15%) 100%);
+    --gradient-ocean: linear-gradient(135deg, hsl(203 60% 15%), hsl(199 84% 25%));
+
+    --shadow-glow: 0 0 30px hsl(199 84% 52% / 0.2);
+    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 8px 40px hsl(0 0% 0% / 0.4);
+
+    --sidebar-background: 210 40% 8%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 199 84% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 30% 15%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 210 30% 18%;
+    --sidebar-ring: 199 84% 52%;
+  }
 
 @layer base {
   * {
@@ -86,6 +137,11 @@
     background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
     backdrop-filter: blur(20px);
     box-shadow: var(--shadow-card);
+  }
+
+  .dark .glass-card {
+    @apply border-white/10;
+    background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
   }
 
   .glass-card-dark {
@@ -155,6 +211,24 @@
 
   .section-subtitle {
     @apply text-lg text-muted-foreground max-w-2xl;
+  }
+
+  /* Hero sections always have dark backgrounds, so text must be light */
+  .hero-section {
+    --hero-text: 0 0% 100%;
+    --hero-text-muted: 0 0% 100%;
+  }
+
+  .hero-section .hero-text {
+    color: hsl(0 0% 100%);
+  }
+
+  .hero-section .hero-text-muted {
+    color: hsl(0 0% 100% / 0.7);
+  }
+
+  .hero-section .hero-text-dim {
+    color: hsl(0 0% 100% / 0.5);
   }
 
   /* Water ripple hover */
