@@ -24,16 +24,16 @@ const CrisisPage = () => {
   return (
     <div className="min-h-screen pt-20">
       {/* Hero */}
-      <section className="bg-hero-gradient text-primary-foreground py-20 relative overflow-hidden">
+      <section className="hero-section bg-hero-gradient py-20 relative overflow-hidden">
         <div className="section-container relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-destructive/30 bg-destructive/10 mb-6">
             <AlertTriangle className="w-4 h-4 text-destructive" />
             <span className="text-sm font-medium text-destructive-foreground">National Emergency</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 max-w-3xl">
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 max-w-3xl hero-text">
             Why Is Groundwater Scarcity a National Emergency?
           </h1>
-          <p className="text-primary-foreground/70 text-lg max-w-2xl">
+          <p className="hero-text-muted text-lg max-w-2xl">
             India's groundwater reserves are depleting at an alarming rate. Over-extraction threatens
             agriculture, industry, and millions of lives.
           </p>
@@ -107,17 +107,17 @@ const CrisisPage = () => {
       </section>
 
       {/* Beverage Plant Risk */}
-      <section className="bg-ocean-gradient text-primary-foreground">
+      <section className="hero-section bg-ocean-gradient">
         <div className="section-container">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-8">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-8 hero-text">
             Why Beverage Plants Face Shutdown Risk
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {regulations.map((r, i) => (
               <div key={i} className="glass-card-dark">
                 <div className="text-ocean-aqua font-display font-bold text-lg mb-2">{r.year}</div>
-                <h3 className="text-primary-foreground font-semibold mb-2">{r.title}</h3>
-                <p className="text-primary-foreground/70 text-sm">{r.desc}</p>
+                <h3 className="hero-text font-semibold mb-2">{r.title}</h3>
+                <p className="hero-text-muted text-sm">{r.desc}</p>
               </div>
             ))}
           </div>
