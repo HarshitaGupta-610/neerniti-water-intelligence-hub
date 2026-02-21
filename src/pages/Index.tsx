@@ -2,42 +2,45 @@ import { Link } from "react-router-dom";
 import { ArrowRight, BarChart3, Gamepad2, Globe, Shield, Droplets, TrendingDown, FlaskConical } from "lucide-react";
 import WaterParticles from "@/components/WaterParticles";
 import WaveDivider from "@/components/WaveDivider";
-
-const stats = [
-  { value: "70%", label: "Plant water from groundwater", icon: Droplets },
-  { value: "500ft+", label: "Water table drop in stressed zones", icon: TrendingDown },
-  { value: "1.5x", label: "Replenishment target by 2027", icon: Shield },
-  { value: "500%", label: "Groundwater charge increase", icon: BarChart3 },
-];
-
-const features = [
-  {
-    icon: BarChart3,
-    title: "Real-Time Dashboard",
-    desc: "Track consumption, recharge, and compliance metrics at a glance.",
-    to: "/dashboard",
-  },
-  {
-    icon: FlaskConical,
-    title: "Simulation Lab",
-    desc: "Model scenarios and find the optimal path to water-positive operations.",
-    to: "/simulation",
-  },
-  {
-    icon: Gamepad2,
-    title: "Gamified Learning",
-    desc: "Learn water sustainability trade-offs through an interactive game.",
-    to: "/game",
-  },
-  {
-    icon: Globe,
-    title: "Community Impact",
-    desc: "See real recharge projects — check dams, ponds, and lake revivals.",
-    to: "/community",
-  },
-];
+import { useLanguage } from "@/components/LanguageProvider";
 
 const Index = () => {
+  const { t } = useLanguage();
+
+  const stats = [
+    { value: "70%", label: t("Plant water from groundwater", "संयंत्र का पानी भूजल से"), icon: Droplets },
+    { value: "500ft+", label: t("Water table drop in stressed zones", "तनावग्रस्त क्षेत्रों में जल स्तर गिरावट"), icon: TrendingDown },
+    { value: "1.5x", label: t("Replenishment target by 2027", "2027 तक पुनःपूर्ति लक्ष्य"), icon: Shield },
+    { value: "500%", label: t("Groundwater charge increase", "भूजल शुल्क वृद्धि"), icon: BarChart3 },
+  ];
+
+  const features = [
+    {
+      icon: BarChart3,
+      title: t("Real-Time Dashboard", "रियल-टाइम डैशबोर्ड"),
+      desc: t("Track consumption, recharge, and compliance metrics at a glance.", "उपभोग, रिचार्ज और अनुपालन मेट्रिक्स एक नज़र में देखें।"),
+      to: "/dashboard",
+    },
+    {
+      icon: FlaskConical,
+      title: t("Simulation Lab", "सिमुलेशन लैब"),
+      desc: t("Model scenarios and find the optimal path to water-positive operations.", "परिदृश्यों का मॉडल बनाएं और जल-सकारात्मक संचालन का इष्टतम मार्ग खोजें।"),
+      to: "/simulation",
+    },
+    {
+      icon: Gamepad2,
+      title: t("Gamified Learning", "गेमिफाइड लर्निंग"),
+      desc: t("Learn water sustainability trade-offs through an interactive game.", "एक इंटरैक्टिव गेम के माध्यम से जल स्थिरता के समझौतों को सीखें।"),
+      to: "/game",
+    },
+    {
+      icon: Globe,
+      title: t("Community Impact", "सामुदायिक प्रभाव"),
+      desc: t("See real recharge projects — check dams, ponds, and lake revivals.", "वास्तविक रिचार्ज परियोजनाएं देखें — चेक डैम, तालाब और झील पुनरुद्धार।"),
+      to: "/community",
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -47,7 +50,7 @@ const Index = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-8 animate-fade-in">
             <Droplets className="w-4 h-4 text-ocean-aqua" />
             <span className="hero-text-muted text-sm font-medium">
-              Water Intelligence Platform
+              {t("Water Intelligence Platform", "जल बुद्धिमत्ता मंच")}
             </span>
           </div>
 
@@ -63,15 +66,17 @@ const Index = () => {
             className="text-xl md:text-2xl hero-text-muted font-light mb-4 animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            Beyond Usage. Toward Regeneration.
+            {t("Beyond Usage. Toward Regeneration.", "उपयोग से परे। पुनर्जनन की ओर।")}
           </p>
 
           <p
             className="hero-text-dim max-w-2xl mx-auto mb-10 animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
-            A comprehensive water governance platform helping businesses achieve 1.5x
-            replenishment while maintaining profitability and community trust.
+            {t(
+              "A comprehensive water governance platform helping businesses achieve 1.5x replenishment while maintaining profitability and community trust.",
+              "एक व्यापक जल शासन मंच जो व्यवसायों को लाभप्रदता और सामुदायिक विश्वास बनाए रखते हुए 1.5x पुनःपूर्ति प्राप्त करने में मदद करता है।"
+            )}
           </p>
 
           <div
@@ -82,25 +87,25 @@ const Index = () => {
               to="/crisis"
               className="px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-all glow-aqua"
             >
-              Explore Crisis
+              {t("Explore Crisis", "संकट जानें")}
             </Link>
             <Link
               to="/simulation"
               className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
-              Try Simulation
+              {t("Try Simulation", "सिमुलेशन आज़माएं")}
             </Link>
             <Link
               to="/dashboard"
               className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
-              View Dashboard
+              {t("View Dashboard", "डैशबोर्ड देखें")}
             </Link>
             <Link
               to="/game"
               className="px-6 py-3 rounded-xl bg-white/10 border border-white/20 hero-text font-semibold text-sm hover:bg-white/20 transition-all backdrop-blur-sm"
             >
-              Play the Game
+              {t("Play the Game", "गेम खेलें")}
             </Link>
           </div>
         </div>
@@ -129,9 +134,12 @@ const Index = () => {
       <section className="bg-muted/50">
         <div className="section-container">
           <div className="text-center mb-12">
-            <h2 className="section-title">Platform Capabilities</h2>
+            <h2 className="section-title">{t("Platform Capabilities", "मंच क्षमताएं")}</h2>
             <p className="section-subtitle mx-auto">
-              Everything you need to understand, simulate, and manage water sustainability.
+              {t(
+                "Everything you need to understand, simulate, and manage water sustainability.",
+                "जल स्थिरता को समझने, अनुकरण करने और प्रबंधित करने के लिए आपको जो कुछ भी चाहिए।"
+              )}
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
@@ -162,16 +170,19 @@ const Index = () => {
         <WaterParticles />
         <div className="section-container relative z-10 text-center">
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 hero-text">
-            Ready to become water-positive?
+            {t("Ready to become water-positive?", "जल-सकारात्मक बनने के लिए तैयार हैं?")}
           </h2>
           <p className="hero-text-muted max-w-xl mx-auto mb-8">
-            Explore the crisis, simulate solutions, and track your path to 1.5x replenishment.
+            {t(
+              "Explore the crisis, simulate solutions, and track your path to 1.5x replenishment.",
+              "संकट का अन्वेषण करें, समाधान अनुकरण करें, और 1.5x पुनःपूर्ति के अपने मार्ग को ट्रैक करें।"
+            )}
           </p>
           <Link
             to="/dashboard"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-all glow-aqua"
           >
-            Get Started <ArrowRight className="w-5 h-5" />
+            {t("Get Started", "शुरू करें")} <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>

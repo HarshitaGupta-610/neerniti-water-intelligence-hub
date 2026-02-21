@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Droplets, Sun, Moon } from "lucide-react";
+import { Menu, X, Droplets, Sun, Moon, Languages } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
-
-const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/crisis", label: "Crisis" },
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/simulation", label: "Simulation" },
-  { to: "/game", label: "Game" },
-  { to: "/community", label: "Community" },
-  { to: "/esg", label: "ESG" },
-];
+import { useLanguage } from "@/components/LanguageProvider";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { language, toggleLanguage, t } = useLanguage();
+
+  const navLinks = [
+    { to: "/", label: t("Home", "होम") },
+    { to: "/crisis", label: t("Crisis", "संकट") },
+    { to: "/dashboard", label: t("Dashboard", "डैशबोर्ड") },
+    { to: "/simulation", label: t("Simulation", "सिमुलेशन") },
+    { to: "/game", label: t("Game", "गेम") },
+    { to: "/community", label: t("Community", "समुदाय") },
+    { to: "/esg", label: t("ESG", "ESG") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -30,6 +32,11 @@ const Navbar = () => {
   }, [location]);
 
   const isHeroPage = location.pathname === "/";
+
+  const iconBtnClass = (isHero: boolean) =>
+    isHero
+      ? "text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+      : "text-muted-foreground hover:text-primary hover:bg-muted";
 
   return (
     <nav
@@ -72,11 +79,19 @@ const Navbar = () => {
               </Link>
             ))}
             <button
+              onClick={toggleLanguage}
+              className={`ml-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 flex items-center gap-1 ${
+                scrolled || !isHeroPage ? iconBtnClass(false) : iconBtnClass(true)
+              }`}
+              aria-label="Toggle language"
+            >
+              <Languages className="w-4 h-4" />
+              {language === "en" ? "हिं" : "EN"}
+            </button>
+            <button
               onClick={toggleTheme}
-              className={`ml-2 p-2 rounded-lg transition-all duration-300 ${
-                scrolled || !isHeroPage
-                  ? "text-muted-foreground hover:text-primary hover:bg-muted"
-                  : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+              className={`ml-1 p-2 rounded-lg transition-all duration-300 ${
+                scrolled || !isHeroPage ? iconBtnClass(false) : iconBtnClass(true)
               }`}
               aria-label="Toggle theme"
             >
@@ -87,11 +102,19 @@ const Navbar = () => {
           {/* Mobile controls */}
           <div className="md:hidden flex items-center gap-1">
             <button
+              onClick={toggleLanguage}
+              className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 ${
+                scrolled || !isHeroPage ? iconBtnClass(false) : iconBtnClass(true)
+              }`}
+              aria-label="Toggle language"
+            >
+              <Languages className="w-4 h-4" />
+              {language === "en" ? "हिं" : "EN"}
+            </button>
+            <button
               onClick={toggleTheme}
               className={`p-2 rounded-lg transition-colors ${
-                scrolled || !isHeroPage
-                  ? "text-muted-foreground hover:text-primary hover:bg-muted"
-                  : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                scrolled || !isHeroPage ? iconBtnClass(false) : iconBtnClass(true)
               }`}
               aria-label="Toggle theme"
             >
