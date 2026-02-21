@@ -278,4 +278,9 @@
   .animate-wave-motion {
     animation: wave-motion 6s ease-in-out infinite;
   }
+
+  @keyframes wave-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }
