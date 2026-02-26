@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Gamepad2, Droplets, DollarSign, Users, Shield, ArrowRight, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useWaterData } from "@/contexts/WaterDataContext";
 
 interface GameState {
   level: number;
@@ -25,18 +26,23 @@ interface Decision {
 
 const GamePage = () => {
   const { t } = useLanguage();
+  const { replenishmentRatio, totalGroundwater, totalConsumed } = useWaterData();
+
+  // Pull live data for initial game state
+  const liveGwPercent = totalConsumed > 0 ? Math.round((totalGroundwater / totalConsumed) * 100) : 80;
+  const liveCompliance = Math.min(100, Math.round(replenishmentRatio / 1.5 * 60));
 
   const initialState: GameState = {
     level: 1,
-    groundwater: 80,
+    groundwater: Math.min(100, Math.max(20, liveGwPercent)),
     profit: 70,
     trust: 50,
-    compliance: 30,
+    compliance: Math.min(80, Math.max(10, liveCompliance)),
     sustainability: 20,
     gameOver: false,
     won: false,
-    messageEn: "You're the new Plant Manager. Groundwater dependence is 80%. Bring it to zero and achieve 1.5x replenishment!",
-    messageHi: "आप नए संयंत्र प्रबंधक हैं। भूजल निर्भरता 80% है। इसे शून्य पर लाएं और 1.5x पुनःपूर्ति प्राप्त करें!",
+    messageEn: `You're the new Plant Manager. Live data: Groundwater dependence is ${liveGwPercent}%, ratio ${replenishmentRatio.toFixed(2)}x. Bring groundwater to zero and achieve 1.5x!`,
+    messageHi: `आप नए संयंत्र प्रबंधक हैं। लाइव डेटा: भूजल निर्भरता ${liveGwPercent}% है, अनुपात ${replenishmentRatio.toFixed(2)}x। भूजल शून्य करें और 1.5x प्राप्त करें!`,
   };
 
   const levelDecisions: Decision[][] = [
@@ -68,41 +74,22 @@ const GamePage = () => {
     setState((prev) => {
       const next = { ...prev };
       const effects = decision.effects;
-
       next.groundwater = Math.max(0, Math.min(100, next.groundwater + (effects.groundwater || 0)));
       next.profit = Math.max(0, Math.min(100, next.profit + (effects.profit || 0)));
       next.trust = Math.max(0, Math.min(100, next.trust + (effects.trust || 0)));
       next.compliance = Math.max(0, Math.min(100, next.compliance + (effects.compliance || 0)));
       next.sustainability = Math.max(0, Math.min(100, next.sustainability + (effects.sustainability || 0)));
-
-      if (next.profit <= 0) {
-        next.gameOver = true; next.won = false;
-        next.messageEn = "💸 Your plant went bankrupt! Sustainability needs to be balanced with profitability.";
-        next.messageHi = "💸 आपका संयंत्र दिवालिया हो गया! स्थिरता को लाभप्रदता के साथ संतुलित करना होगा।";
-      } else if (next.trust <= 0) {
-        next.gameOver = true; next.won = false;
-        next.messageEn = "😡 Community protests forced your plant to shut down. Trust matters!";
-        next.messageHi = "😡 सामुदायिक विरोध ने आपके संयंत्र को बंद करवा दिया। विश्वास मायने रखता है!";
-      } else if (next.groundwater <= 0 && next.compliance >= 80 && next.sustainability >= 70) {
-        next.gameOver = true; next.won = true;
-        next.messageEn = "🎉 Congratulations! You achieved Net Zero groundwater dependence with 1.5x replenishment!";
-        next.messageHi = "🎉 बधाई! आपने 1.5x पुनःपूर्ति के साथ नेट ज़ीरो भूजल निर्भरता प्राप्त कर ली!";
-      } else if (next.level >= 4) {
-        if (next.groundwater <= 10 && next.compliance >= 60) {
-          next.gameOver = true; next.won = true;
-          next.messageEn = "🏆 Well done! You've significantly reduced groundwater dependence and improved compliance.";
-          next.messageHi = "🏆 शाबाश! आपने भूजल निर्भरता काफी कम कर दी और अनुपालन में सुधार किया।";
-        } else {
-          next.gameOver = true; next.won = false;
-          next.messageEn = "⏰ Time's up! You didn't reduce groundwater dependence enough. Try again with better strategy.";
-          next.messageHi = "⏰ समय समाप्त! आपने भूजल निर्भरता पर्याप्त कम नहीं की। बेहतर रणनीति के साथ फिर कोशिश करें।";
-        }
+      if (next.profit <= 0) { next.gameOver = true; next.won = false; next.messageEn = "💸 Your plant went bankrupt!"; next.messageHi = "💸 आपका संयंत्र दिवालिया हो गया!"; }
+      else if (next.trust <= 0) { next.gameOver = true; next.won = false; next.messageEn = "😡 Community protests forced shutdown!"; next.messageHi = "😡 सामुदायिक विरोध ने बंद करवा दिया!"; }
+      else if (next.groundwater <= 0 && next.compliance >= 80 && next.sustainability >= 70) { next.gameOver = true; next.won = true; next.messageEn = "🎉 Net Zero achieved with 1.5x replenishment!"; next.messageHi = "🎉 1.5x पुनःपूर्ति के साथ नेट ज़ीरो प्राप्त!"; }
+      else if (next.level >= 4) {
+        if (next.groundwater <= 10 && next.compliance >= 60) { next.gameOver = true; next.won = true; next.messageEn = "🏆 Well done! Significant progress!"; next.messageHi = "🏆 शाबाश! महत्वपूर्ण प्रगति!"; }
+        else { next.gameOver = true; next.won = false; next.messageEn = "⏰ Time's up! Try again."; next.messageHi = "⏰ समय समाप्त! पुनः प्रयास करें।"; }
       } else {
         next.level = prev.level + 1;
-        next.messageEn = `Level ${next.level}: Your decisions are shaping the future. Groundwater: ${next.groundwater}%`;
-        next.messageHi = `स्तर ${next.level}: आपके निर्णय भविष्य को आकार दे रहे हैं। भूजल: ${next.groundwater}%`;
+        next.messageEn = `Level ${next.level}: Groundwater: ${next.groundwater}%`;
+        next.messageHi = `स्तर ${next.level}: भूजल: ${next.groundwater}%`;
       }
-
       return next;
     });
   };
@@ -132,32 +119,16 @@ const GamePage = () => {
           </div>
           <h1 className="section-title text-center">{t("From Day Zero to Net Zero", "डे ज़ीरो से नेट ज़ीरो तक")}</h1>
           <p className="section-subtitle mx-auto text-center">
-            {t(
-              "You're a Plant Manager. Eliminate groundwater dependence while maintaining profits and community trust.",
-              "आप एक संयंत्र प्रबंधक हैं। लाभ और सामुदायिक विश्वास बनाए रखते हुए भूजल निर्भरता समाप्त करें।"
-            )}
+            {t("Live data connected. Eliminate groundwater dependence while maintaining profits and trust.", "लाइव डेटा कनेक्टेड। लाभ और विश्वास बनाए रखते हुए भूजल निर्भरता समाप्त करें।")}
           </p>
         </div>
 
-        {/* Level Indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
           {[1, 2, 3, 4].map((l) => (
-            <div
-              key={l}
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-sm transition-all ${
-                l < state.level
-                  ? "bg-accent text-accent-foreground"
-                  : l === state.level
-                  ? "bg-secondary text-secondary-foreground glow-aqua"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {l}
-            </div>
+            <div key={l} className={`w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-sm transition-all ${l < state.level ? "bg-accent text-accent-foreground" : l === state.level ? "bg-secondary text-secondary-foreground glow-aqua" : "bg-muted text-muted-foreground"}`}>{l}</div>
           ))}
         </div>
 
-        {/* Meters */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
           <Meter label={t("Sustainability", "स्थिरता")} value={state.sustainability} icon={Droplets} color="text-accent" />
           <Meter label={t("Profit", "लाभ")} value={state.profit} icon={DollarSign} color="text-secondary" />
@@ -166,25 +137,14 @@ const GamePage = () => {
           <Meter label={t("Groundwater", "भूजल")} value={state.groundwater} icon={Droplets} color="text-destructive" />
         </div>
 
-        {/* Message */}
         <div className={`glass-card text-center mb-6 ${state.gameOver ? (state.won ? "border-accent/30" : "border-destructive/30") : ""}`}>
           <p className="text-primary font-medium">{t(state.messageEn, state.messageHi)}</p>
         </div>
 
-        {/* Decisions or Game Over */}
         {state.gameOver ? (
           <div className="text-center">
-            <div className="mb-6">
-              {state.won ? (
-                <Trophy className="w-16 h-16 text-accent mx-auto animate-pulse_glow rounded-full" />
-              ) : (
-                <XCircle className="w-16 h-16 text-destructive mx-auto" />
-              )}
-            </div>
-            <button
-              onClick={reset}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-all"
-            >
+            <div className="mb-6">{state.won ? <Trophy className="w-16 h-16 text-accent mx-auto animate-pulse_glow rounded-full" /> : <XCircle className="w-16 h-16 text-destructive mx-auto" />}</div>
+            <button onClick={reset} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-all">
               <RotateCcw className="w-5 h-5" /> {t("Play Again", "फिर से खेलें")}
             </button>
           </div>
@@ -192,11 +152,7 @@ const GamePage = () => {
           <div className="space-y-3">
             <h3 className="font-display font-semibold text-primary text-center mb-4">{t("Choose Your Action", "अपनी कार्रवाई चुनें")}</h3>
             {currentDecisions.map((d, i) => (
-              <button
-                key={i}
-                onClick={() => makeDecision(d)}
-                className="w-full stat-card text-left flex items-center justify-between group cursor-pointer hover:border-secondary/30"
-              >
+              <button key={i} onClick={() => makeDecision(d)} className="w-full stat-card text-left flex items-center justify-between group cursor-pointer hover:border-secondary/30">
                 <div>
                   <div className="font-semibold text-primary group-hover:text-secondary transition-colors">{t(d.textEn, d.textHi)}</div>
                   <div className="text-sm text-muted-foreground">{t(d.descEn, d.descHi)}</div>

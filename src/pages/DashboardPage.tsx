@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { Droplets, BarChart3, Target, TrendingUp, Factory, DollarSign, CheckCircle, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
-
-const plants = [
-  { name: "Plant Alpha", consumed: 12500, recharged: 15000, cost: 2.4 },
-  { name: "Plant Beta", consumed: 8700, recharged: 11200, cost: 1.8 },
-  { name: "Plant Gamma", consumed: 15300, recharged: 18500, cost: 3.1 },
-  { name: "Plant Delta", consumed: 6200, recharged: 7800, cost: 1.2 },
-];
+import { useWaterData } from "@/contexts/WaterDataContext";
 
 const DashboardPage = () => {
-  const [selectedPlant, setSelectedPlant] = useState<number | null>(null);
   const { t } = useLanguage();
+  const { dataset, totalConsumed, totalRecharged, replenishmentRatio, complianceStatus, groundwaterElimination, daysTo2027 } = useWaterData();
 
-  const totalConsumed = plants.reduce((a, p) => a + p.consumed, 0);
-  const totalRecharged = plants.reduce((a, p) => a + p.recharged, 0);
-  const ratio = totalRecharged / totalConsumed;
+  const plants = dataset.plants;
+  const ratio = replenishmentRatio;
   const isCompliant = ratio >= 1.5;
-
   const pricePerBottle = 22 + (1.5 - Math.min(ratio, 1.5)) * 8;
 
   return (
@@ -26,6 +18,7 @@ const DashboardPage = () => {
         <div className="mb-10">
           <h1 className="section-title">{t("Water Intelligence Dashboard", "जल बुद्धिमत्ता डैशबोर्ड")}</h1>
           <p className="section-subtitle">{t("Real-time monitoring of water consumption, recharge, and compliance.", "जल उपभोग, रिचार्ज और अनुपालन की वास्तविक समय निगरानी।")}</p>
+          <p className="text-xs text-muted-foreground mt-2">{t("Last updated:", "अंतिम अपडेट:")} {new Date(dataset.lastUpdated).toLocaleString()} | {t("by", "द्वारा")} {dataset.updatedBy}</p>
         </div>
 
         {/* KPI Cards */}
@@ -71,15 +64,28 @@ const DashboardPage = () => {
             <span className="text-sm text-muted-foreground">{((ratio / 1.5) * 100).toFixed(0)}%</span>
           </div>
           <div className="w-full h-4 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full bg-aqua-gradient transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min((ratio / 1.5) * 100, 100)}%` }}
-            />
+            <div className="h-full rounded-full bg-aqua-gradient transition-all duration-1000 ease-out" style={{ width: `${Math.min((ratio / 1.5) * 100, 100)}%` }} />
           </div>
           <div className="flex justify-between mt-2 text-xs text-muted-foreground">
             <span>0x</span>
             <span>0.75x</span>
             <span className="text-accent font-semibold">{t("1.5x Target", "1.5x लक्ष्य")}</span>
+          </div>
+        </div>
+
+        {/* Additional metrics */}
+        <div className="grid md:grid-cols-3 gap-4 mb-8">
+          <div className="stat-card text-center">
+            <div className="text-xs text-muted-foreground mb-1">{t("GW Elimination Progress", "भूजल उन्मूलन प्रगति")}</div>
+            <div className="text-2xl font-display font-bold text-primary">{groundwaterElimination}%</div>
+          </div>
+          <div className="stat-card text-center">
+            <div className="text-xs text-muted-foreground mb-1">{t("2027 Deadline", "2027 समय सीमा")}</div>
+            <div className="text-2xl font-display font-bold text-primary">{daysTo2027} {t("days", "दिन")}</div>
+          </div>
+          <div className="stat-card text-center">
+            <div className="text-xs text-muted-foreground mb-1">{t("Est. Bottle Price", "अनुमानित बोतल मूल्य")}</div>
+            <div className="text-2xl font-display font-bold text-primary">₹{pricePerBottle.toFixed(2)}</div>
           </div>
         </div>
 
@@ -146,6 +152,7 @@ const DashboardPage = () => {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-3 px-2 text-muted-foreground font-medium">{t("Plant", "संयंत्र")}</th>
+                  <th className="text-right py-3 px-2 text-muted-foreground font-medium">{t("Region", "क्षेत्र")}</th>
                   <th className="text-right py-3 px-2 text-muted-foreground font-medium">{t("Consumed (KL)", "उपभोग (KL)")}</th>
                   <th className="text-right py-3 px-2 text-muted-foreground font-medium">{t("Recharged (KL)", "रिचार्ज (KL)")}</th>
                   <th className="text-right py-3 px-2 text-muted-foreground font-medium">{t("Ratio", "अनुपात")}</th>
@@ -154,12 +161,13 @@ const DashboardPage = () => {
               </thead>
               <tbody>
                 {plants.map((p, i) => {
-                  const r = p.recharged / p.consumed;
+                  const r = p.rechargeProjects / p.monthlyConsumption;
                   return (
                     <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-2 font-medium text-primary">{p.name}</td>
-                      <td className="py-3 px-2 text-right text-muted-foreground">{p.consumed.toLocaleString()}</td>
-                      <td className="py-3 px-2 text-right text-muted-foreground">{p.recharged.toLocaleString()}</td>
+                      <td className="py-3 px-2 text-right text-muted-foreground capitalize">{p.region}</td>
+                      <td className="py-3 px-2 text-right text-muted-foreground">{p.monthlyConsumption.toLocaleString()}</td>
+                      <td className="py-3 px-2 text-right text-muted-foreground">{p.rechargeProjects.toLocaleString()}</td>
                       <td className={`py-3 px-2 text-right font-semibold ${r >= 1.5 ? "text-accent" : "text-destructive"}`}>
                         {r.toFixed(2)}x
                       </td>
